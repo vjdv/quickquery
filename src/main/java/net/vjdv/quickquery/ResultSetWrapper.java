@@ -20,6 +20,22 @@ public class ResultSetWrapper {
         }
     }
 
+    public byte[] getBytes(String column) {
+        try {
+            return rs.getBytes(column);
+        } catch (SQLException ex) {
+            throw new QueryException("Error getting bytes from column " + column, ex);
+        }
+    }
+
+    public byte[] getBytes(int column) {
+        try {
+            return rs.getBytes(column);
+        } catch (SQLException ex) {
+            throw new QueryException("Error getting bytes from column " + column, ex);
+        }
+    }
+
     public int getInt(String column) {
         try {
             return rs.getInt(column);

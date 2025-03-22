@@ -55,13 +55,25 @@ public class PreparedStatementBuilder {
     }
 
     /**
-     * Execute query without result
+     * Execute query without result using PreparedStatement.execute
      */
     public void execute() {
         try (stmt) {
             stmt.execute();
         } catch (SQLException ex) {
             throw new QueryException("Error executing query", ex);
+        }
+    }
+
+    /**
+     * Execute an update statement using PreparedStatement.executeUpdate
+     * @return the number of rows affected
+     */
+    public int executeUpdate() {
+        try (stmt) {
+            return stmt.executeUpdate();
+        } catch (SQLException ex) {
+            throw new QueryException("Error executing update", ex);
         }
     }
 
