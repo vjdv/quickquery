@@ -1,6 +1,6 @@
 package net.vjdv.quickquery;
 
-import net.vjdv.quickquery.exceptions.QueryException;
+import net.vjdv.quickquery.exceptions.DataAccessException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -28,7 +28,7 @@ public class PreparedStatementExecutor<T> {
                 result.set(item);
             }
         } catch (SQLException ex) {
-            throw new QueryException("Error quering item", ex);
+            throw new DataAccessException("Error quering item", ex);
         }
         return Optional.ofNullable(result.get());
     }
@@ -41,7 +41,7 @@ public class PreparedStatementExecutor<T> {
                 list.add(item);
             }
         } catch (SQLException ex) {
-            throw new QueryException("Error quering list", ex);
+            throw new DataAccessException("Error quering list", ex);
         }
         return list;
     }
@@ -53,7 +53,7 @@ public class PreparedStatementExecutor<T> {
                 consumer.accept(item);
             }
         } catch (SQLException ex) {
-            throw new QueryException("Error quering list", ex);
+            throw new DataAccessException("Error quering list", ex);
         }
     }
 

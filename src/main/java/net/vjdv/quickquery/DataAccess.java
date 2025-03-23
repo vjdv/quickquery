@@ -1,6 +1,6 @@
 package net.vjdv.quickquery;
 
-import net.vjdv.quickquery.exceptions.QueryException;
+import net.vjdv.quickquery.exceptions.DataAccessException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -8,23 +8,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.function.Supplier;
 
-public class Sql {
+public class DataAccess {
     private final Supplier<Connection> connectionSupplier;
 
-    public Sql(Supplier<Connection> connectionSupplier) {
+    public DataAccess(Supplier<Connection> connectionSupplier) {
         this.connectionSupplier = connectionSupplier;
     }
 
-    public Sql(Connection conn) {
+    public DataAccess(Connection conn) {
         this(() -> conn);
     }
 
-    public Sql(DataSource dataSource) {
+    public DataAccess(DataSource dataSource) {
         this(() -> {
             try {
                 return dataSource.getConnection();
             } catch (SQLException ex) {
-                throw new QueryException("Error getting connection from datasource", ex);
+                throw new DataAccessException("Error getting connection from datasource", ex);
             }
         });
     }
@@ -38,7 +38,7 @@ public class Sql {
             var stmt = conn().prepareStatement(sql);
             return new PreparedStatementBuilder(stmt);
         } catch (SQLException ex) {
-            throw new QueryException("Error creating prepared statement", ex);
+            throw new DataAccessException("Error creating prepared statement", ex);
         }
     }
 
@@ -47,7 +47,7 @@ public class Sql {
             var stmt = conn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             return new PreparedStatementBuilder(stmt);
         } catch (SQLException ex) {
-            throw new QueryException("Error creating prepared statement", ex);
+            throw new DataAccessException("Error creating prepared statement", ex);
         }
     }
 }

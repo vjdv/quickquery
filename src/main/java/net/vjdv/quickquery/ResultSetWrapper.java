@@ -1,6 +1,6 @@
 package net.vjdv.quickquery;
 
-import net.vjdv.quickquery.exceptions.QueryException;
+import net.vjdv.quickquery.exceptions.DataAccessException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +16,7 @@ public class ResultSetWrapper {
         try {
             return rs.next();
         } catch (SQLException ex) {
-            throw new QueryException("Error getting next result", ex);
+            throw new DataAccessException("Error getting next result", ex);
         }
     }
 
@@ -24,7 +24,7 @@ public class ResultSetWrapper {
         try {
             return rs.getBytes(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting bytes from column " + column, ex);
+            throw new DataAccessException("Error getting bytes from column " + column, ex);
         }
     }
 
@@ -32,7 +32,7 @@ public class ResultSetWrapper {
         try {
             return rs.getBytes(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting bytes from column " + column, ex);
+            throw new DataAccessException("Error getting bytes from column " + column, ex);
         }
     }
 
@@ -40,7 +40,7 @@ public class ResultSetWrapper {
         try {
             return rs.getInt(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting int from column " + column, ex);
+            throw new DataAccessException("Error getting int from column " + column, ex);
         }
     }
 
@@ -48,7 +48,7 @@ public class ResultSetWrapper {
         try {
             return rs.getInt(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting int from column " + column, ex);
+            throw new DataAccessException("Error getting int from column " + column, ex);
         }
     }
 
@@ -56,7 +56,7 @@ public class ResultSetWrapper {
         try {
             return rs.getString(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting string from column " + column, ex);
+            throw new DataAccessException("Error getting string from column " + column, ex);
         }
     }
 
@@ -64,7 +64,7 @@ public class ResultSetWrapper {
         try {
             return rs.getString(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting string from column " + column, ex);
+            throw new DataAccessException("Error getting string from column " + column, ex);
         }
     }
 
@@ -72,7 +72,7 @@ public class ResultSetWrapper {
         try {
             return rs.getLong(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting long from column " + column, ex);
+            throw new DataAccessException("Error getting long from column " + column, ex);
         }
     }
 
@@ -80,7 +80,7 @@ public class ResultSetWrapper {
         try {
             return rs.getLong(column);
         } catch (SQLException ex) {
-            throw new QueryException("Error getting long from column " + column, ex);
+            throw new DataAccessException("Error getting long from column " + column, ex);
         }
     }
 }

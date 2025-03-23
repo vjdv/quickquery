@@ -1,6 +1,6 @@
 package net.vjdv.quickquery;
 
-import net.vjdv.quickquery.exceptions.QueryException;
+import net.vjdv.quickquery.exceptions.DataAccessException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -33,7 +33,7 @@ public class PreparedStatementBuilder {
             stmt.setString(index++, value);
             return this;
         } catch (SQLException ex) {
-            throw new QueryException("Error setting string parameter", ex);
+            throw new DataAccessException("Error setting string parameter", ex);
         }
     }
 
@@ -48,7 +48,7 @@ public class PreparedStatementBuilder {
             stmt.setBytes(index++, value);
             return this;
         } catch (SQLException ex) {
-            throw new QueryException("Error setting bytes parameter", ex);
+            throw new DataAccessException("Error setting bytes parameter", ex);
         }
     }
 
@@ -63,7 +63,7 @@ public class PreparedStatementBuilder {
             stmt.setInt(index++, value);
             return this;
         } catch (SQLException ex) {
-            throw new QueryException("Error setting int parameter", ex);
+            throw new DataAccessException("Error setting int parameter", ex);
         }
     }
 
@@ -78,7 +78,7 @@ public class PreparedStatementBuilder {
             stmt.setLong(index++, value);
             return this;
         } catch (SQLException ex) {
-            throw new QueryException("Error setting long parameter", ex);
+            throw new DataAccessException("Error setting long parameter", ex);
         }
     }
 
@@ -100,7 +100,7 @@ public class PreparedStatementBuilder {
         try (stmt) {
             stmt.execute();
         } catch (SQLException ex) {
-            throw new QueryException("Error executing query", ex);
+            throw new DataAccessException("Error executing query", ex);
         }
     }
 
@@ -113,7 +113,7 @@ public class PreparedStatementBuilder {
         try (stmt) {
             return stmt.executeUpdate();
         } catch (SQLException ex) {
-            throw new QueryException("Error executing update", ex);
+            throw new DataAccessException("Error executing update", ex);
         }
     }
 
@@ -129,7 +129,7 @@ public class PreparedStatementBuilder {
                 return rs.getInt(1);
             }
         } catch (SQLException ex) {
-            throw new QueryException("Error executing insert", ex);
+            throw new DataAccessException("Error executing insert", ex);
         }
     }
 

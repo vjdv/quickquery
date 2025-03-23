@@ -1,7 +1,7 @@
 package net.vjdv;
 
-import net.vjdv.quickquery.Sql;
-import net.vjdv.quickquery.exceptions.QueryException;
+import net.vjdv.quickquery.DataAccess;
+import net.vjdv.quickquery.exceptions.DataAccessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * Unit test for simple App.
  */
 public class AppTest {
-    private static final Sql data;
+    private static final DataAccess data;
 
     static {
         //sqlite database
@@ -21,7 +21,7 @@ public class AppTest {
         try {
             Class.forName("org.sqlite.JDBC");
             var connection = DriverManager.getConnection(url);
-            data = new Sql(connection);
+            data = new DataAccess(connection);
             //Create table
             String sql = """
                     CREATE TABLE IF NOT EXISTS person (
@@ -31,7 +31,7 @@ public class AppTest {
                     )""";
             data.query(sql).execute();
         } catch (ClassNotFoundException | SQLException ex) {
-            throw new QueryException("Error opening database", ex);
+            throw new DataAccessException("Error opening database", ex);
         }
     }
 
