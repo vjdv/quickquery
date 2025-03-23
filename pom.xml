@@ -4,7 +4,7 @@
 
   <groupId>net.vjdv</groupId>
   <artifactId>quickquery</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
@@ -111,6 +111,13 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <keyname>55B0E644660DECA3743430938A4F133B6D78C7B5</keyname>
+          <gpgArguments>
+            <arg>--pinentry-mode</arg>
+            <arg>loopback</arg>
+          </gpgArguments>
+        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -6,14 +6,28 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.function.Function;
 
+/**
+ * A builder class to create a PreparedStatement with parameters
+ */
 public class PreparedStatementBuilder {
     private final PreparedStatement stmt;
     private int index = 1;
 
+    /**
+     * Create a PreparedStatementBuilder instance
+     *
+     * @param stmt the prepared statement to be used
+     */
     public PreparedStatementBuilder(PreparedStatement stmt) {
         this.stmt = stmt;
     }
 
+    /**
+     * Set a string parameter to consecutive parameter index
+     *
+     * @param value the string value
+     * @return same PreparedStatementBuilder instance
+     */
     public PreparedStatementBuilder setString(String value) {
         try {
             stmt.setString(index++, value);
@@ -23,6 +37,12 @@ public class PreparedStatementBuilder {
         }
     }
 
+    /**
+     * Set a byte array parameter to consecutive parameter index
+     *
+     * @param value the byte array value
+     * @return same PreparedStatementBuilder instance
+     */
     public PreparedStatementBuilder setBytes(byte[] value) {
         try {
             stmt.setBytes(index++, value);
@@ -32,6 +52,12 @@ public class PreparedStatementBuilder {
         }
     }
 
+    /**
+     * Set an int parameter to consecutive parameter index
+     *
+     * @param value the int value
+     * @return same PreparedStatementBuilder instance
+     */
     public PreparedStatementBuilder setInt(int value) {
         try {
             stmt.setInt(index++, value);
@@ -41,6 +67,12 @@ public class PreparedStatementBuilder {
         }
     }
 
+    /**
+     * Set a long parameter to consecutive parameter index
+     *
+     * @param value the long value
+     * @return same PreparedStatementBuilder instance
+     */
     public PreparedStatementBuilder setLong(long value) {
         try {
             stmt.setLong(index++, value);
@@ -50,6 +82,13 @@ public class PreparedStatementBuilder {
         }
     }
 
+    /**
+     * Sets a result mapper function to be used in the query execution
+     *
+     * @param function the function to map the result
+     * @param <T>      the type of the result
+     * @return a PreparedStatementExecutor instance
+     */
     public <T> PreparedStatementExecutor<T> resultMapper(Function<ResultSetWrapper, T> function) {
         return new PreparedStatementExecutor<>(stmt, function);
     }
@@ -67,6 +106,7 @@ public class PreparedStatementBuilder {
 
     /**
      * Execute an update statement using PreparedStatement.executeUpdate
+     *
      * @return the number of rows affected
      */
     public int executeUpdate() {
