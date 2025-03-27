@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
+import java.security.SecureRandom;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 /**
  * Unit test for simple App.
@@ -28,6 +30,15 @@ public class AppTest {
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT,
                         age INTEGER
+                    )""";
+            data.query(sql).execute();
+            //Another table
+            sql = """
+                    CREATE TABLE IF NOT EXISTS point (
+                        id BLOB PRIMARY KEY,
+                        quantity INTEGER,
+                        pos REAL,
+                        datetime INTEGER
                     )""";
             data.query(sql).execute();
         } catch (ClassNotFoundException | SQLException ex) {
@@ -69,6 +80,38 @@ public class AppTest {
         Assertions.assertEquals(2, affected);
     }
 
+    @Test
+    public void testPoint() {
+        var id = new byte[16];
+        new SecureRandom().nextBytes(id);
+        var now = LocalDateTime.parse("2025-03-26T21:30:05.123");
+        var point = new Point(id, 100, 3.14, now);
+        data.query("INSERT INTO point (id, quantity, pos, datetime) VALUES (?, ?, ?, ?)")
+                .setBytes(point.id)
+                .setInt(point.quantity)
+                .setDouble(point.pos)
+                .setLocalDateTimeLong(point.datetime)
+                .execute();
+        var point1 = data.query("SELECT id, quantity, pos, datetime FROM point WHERE id = ?")
+                .setBytes(point.id)
+                .resultMapper(rs -> {
+                    byte[] id2 = rs.getBytes("id");
+                    int quantity = rs.getInt("quantity");
+                    double pos = rs.getDouble("pos");
+                    LocalDateTime datetime = rs.getLocalDateTimeLong("datetime");
+                    return new Point(id2, quantity, pos, datetime);
+                })
+                .findOne();
+        Assertions.assertTrue(point1.isPresent());
+        Assertions.assertArrayEquals(point.id, point1.get().id);
+        Assertions.assertEquals(point.quantity, point1.get().quantity);
+        Assertions.assertEquals(point.pos, point1.get().pos);
+        Assertions.assertEquals(point.datetime, point1.get().datetime);
+    }
+
     record Person(String name, int age) {
+    }
+
+    record Point(byte[] id, int quantity, double pos, LocalDateTime datetime) {
     }
 }

@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.function.Function;
 
 /**
@@ -239,6 +241,21 @@ public class PreparedStatementBuilder {
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting int parameter", ex);
+        }
+    }
+
+    /**
+     * Set a LocalDateTime parameter converted to utc millis to consecutive parameter index, nano precision is lost
+     *
+     * @param value the LocalDateTime value
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setLocalDateTimeLong(LocalDateTime value) {
+        try {
+            stmt.setLong(index++, value.toInstant(ZoneOffset.UTC).toEpochMilli());
+            return this;
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error setting localdatetime parameter", ex);
         }
     }
 

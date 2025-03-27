@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 /**
  * Wrapper for ResultSet to mute exceptions, throws DataAccessException instead when reading values
@@ -282,6 +285,44 @@ public class ResultSetWrapper {
             return rs.getString(column);
         } catch (SQLException ex) {
             throw new DataAccessException("Error getting string from column " + column, ex);
+        }
+    }
+
+    /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a LocalDateTime, the original value is a long representing milliseconds since epoch
+     *
+     * @param column column name
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public LocalDateTime getLocalDateTimeLong(String column) {
+        try {
+            var millis = rs.getLong(column);
+            if (rs.wasNull()) {
+                return null;
+            }
+            return Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDateTime();
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting localdatetime from column " + column, ex);
+        }
+    }
+
+    /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a LocalDateTime, the original value is a long representing milliseconds since epoch
+     *
+     * @param column column index
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public LocalDateTime getLocalDateTimeLong(int column) {
+        try {
+            var millis = rs.getLong(column);
+            if (rs.wasNull()) {
+                return null;
+            }
+            return Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDateTime();
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting localdatetime from column " + column, ex);
         }
     }
 
