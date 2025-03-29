@@ -1,14 +1,12 @@
 package net.vjdv;
 
 import net.vjdv.quickquery.DataAccess;
-import net.vjdv.quickquery.exceptions.DataAccessException;
+import net.vjdv.quickquery.QuickQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.security.SecureRandom;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 /**
@@ -20,30 +18,24 @@ public class AppTest {
     static {
         //sqlite database
         String url = "jdbc:sqlite:" + Path.of("db.sqlite").toAbsolutePath();
-        try {
-            Class.forName("org.sqlite.JDBC");
-            var connection = DriverManager.getConnection(url);
-            data = new DataAccess(connection);
-            //Create table
-            String sql = """
-                    CREATE TABLE IF NOT EXISTS person (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT,
-                        age INTEGER
-                    )""";
-            data.query(sql).execute();
-            //Another table
-            sql = """
-                    CREATE TABLE IF NOT EXISTS point (
-                        id BLOB PRIMARY KEY,
-                        quantity INTEGER,
-                        pos REAL,
-                        datetime INTEGER
-                    )""";
-            data.query(sql).execute();
-        } catch (ClassNotFoundException | SQLException ex) {
-            throw new DataAccessException("Error opening database", ex);
-        }
+        data = QuickQuery.createConnection("org.sqlite.JDBC", url);
+        //Create table
+        String sql = """
+                CREATE TABLE IF NOT EXISTS person (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    age INTEGER
+                )""";
+        data.query(sql).execute();
+        //Another table
+        sql = """
+                CREATE TABLE IF NOT EXISTS point (
+                    id BLOB PRIMARY KEY,
+                    quantity INTEGER,
+                    pos REAL,
+                    datetime INTEGER
+                )""";
+        data.query(sql).execute();
     }
 
     @Test

@@ -2,7 +2,6 @@ package net.vjdv.quickquery;
 
 import net.vjdv.quickquery.exceptions.DataAccessException;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,32 +18,8 @@ public class DataAccess {
      *
      * @param connectionSupplier supplier of connection
      */
-    public DataAccess(Supplier<Connection> connectionSupplier) {
+    protected DataAccess(Supplier<Connection> connectionSupplier) {
         this.connectionSupplier = connectionSupplier;
-    }
-
-    /**
-     * Creates a new instance of DataAccess for a connection
-     *
-     * @param conn connection
-     */
-    public DataAccess(Connection conn) {
-        this(() -> conn);
-    }
-
-    /**
-     * Creates a new instance of DataAccess for a datasource
-     *
-     * @param dataSource datasource
-     */
-    public DataAccess(DataSource dataSource) {
-        this(() -> {
-            try {
-                return dataSource.getConnection();
-            } catch (SQLException ex) {
-                throw new DataAccessException("Error getting connection from datasource", ex);
-            }
-        });
     }
 
     /**
