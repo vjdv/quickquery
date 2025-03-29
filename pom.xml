@@ -4,7 +4,7 @@
 
   <groupId>net.vjdv</groupId>
   <artifactId>quickquery</artifactId>
-  <version>0.0.2</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>${project.groupId}:${project.artifactId}</name>
