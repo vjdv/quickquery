@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.function.Consumer;
 
 /**
  * Wrapper for ResultSet to mute exceptions, throws DataAccessException instead when reading values
@@ -493,6 +494,30 @@ public class ResultSetWrapper {
             return rs.getTimestamp(column);
         } catch (SQLException ex) {
             throw new DataAccessException("Error getting timestamp from column " + column, ex);
+        }
+    }
+
+    /**
+     * Reports whether the last column read had a value of SQL NULL. Note that you must first call one of the getter methods on a column to try to read its value and then call the method wasNull to see if the value read was SQL NULL.
+     *
+     * @return true if the last column read was SQL NULL
+     */
+    public boolean wasNull() {
+        try {
+            return rs.wasNull();
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting wasNull", ex);
+        }
+    }
+
+    /**
+     * Executes an action for each row in the result set
+     *
+     * @param consumer ResultSetWrapper consumer
+     */
+    public void forEach(Consumer<ResultSetWrapper> consumer) {
+        while (next()) {
+            consumer.accept(this);
         }
     }
 }

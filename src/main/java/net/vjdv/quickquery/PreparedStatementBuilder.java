@@ -536,6 +536,19 @@ public class PreparedStatementBuilder {
     }
 
     /**
+     * Execute a query statement using PreparedStatement.executeQuery and wrap the result in a ResultSetWrapper
+     *
+     * @return the ResultSetWrapper
+     */
+    public ResultSetWrapper executeQuery() {
+        try {
+            return new ResultSetWrapper(stmt.executeQuery());
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error executing query", ex);
+        }
+    }
+
+    /**
      * Execute an insert statement and return the autoincremented id
      *
      * @return the autoincremented id

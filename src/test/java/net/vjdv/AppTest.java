@@ -101,6 +101,20 @@ public class AppTest {
         Assertions.assertEquals(point.datetime, point1.get().datetime);
     }
 
+    @Test
+    public void testExecuteQuery() {
+        data.query("INSERT INTO person (name, age) VALUES ('Will', 90), ('Sam', 90)").execute();
+        data.query("SELECT name, age FROM person WHERE age = ?")
+                .setInt(90)
+                .executeQuery()
+                .forEach(rs -> {
+                    String name = rs.getString("name");
+                    int age = rs.getInt("age");
+                    Assertions.assertNotNull(name);
+                    Assertions.assertEquals(90, age);
+                });
+    }
+
     record Person(String name, int age) {
     }
 
