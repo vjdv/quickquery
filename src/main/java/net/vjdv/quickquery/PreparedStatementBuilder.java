@@ -2,6 +2,9 @@ package net.vjdv.quickquery;
 
 import net.vjdv.quickquery.exceptions.DataAccessException;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.RecordComponent;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.Clob;
@@ -32,6 +35,30 @@ public class PreparedStatementBuilder {
      */
     public PreparedStatementBuilder(PreparedStatement stmt) {
         this.stmt = stmt;
+    }
+
+    /**
+     * Validates constructor parameters for a record class
+     *
+     * @param constructor the constructor
+     * @param components  the record components
+     * @return true if the constructor matches the components
+     */
+    private static boolean matchesParameterTypes(Constructor<?> constructor, RecordComponent[] components) {
+        Class<?>[] expectedTypes = new Class<?>[components.length];
+        for (int i = 0; i < components.length; i++) {
+            expectedTypes[i] = components[i].getType();
+        }
+        Class<?>[] paramTypes = constructor.getParameterTypes();
+        if (paramTypes.length != expectedTypes.length) {
+            return false;
+        }
+        for (int i = 0; i < paramTypes.length; i++) {
+            if (!paramTypes[i].equals(expectedTypes[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -508,6 +535,66 @@ public class PreparedStatementBuilder {
      * @return a PreparedStatementExecutor instance
      */
     public <T> PreparedStatementExecutor<T> resultMapper(Function<ResultSetWrapper, T> function) {
+        return new PreparedStatementExecutor<>(stmt, function);
+    }
+
+    /**
+     * Uses a record class to map the result set to a record instance. Uses record components so components name must match the column names
+     *
+     * @param clazz the record class
+     * @param <T>   the type of the record
+     * @return a PreparedStatementExecutor instance
+     */
+    public <T> PreparedStatementExecutor<T> resultMapper(Class<T> clazz) {
+        if (!clazz.isRecord()) {
+            throw new DataAccessException("Class " + clazz.getName() + " is not a record");
+        }
+        RecordComponent[] components = clazz.getRecordComponents();
+        Constructor<?> constructor = null;
+        for (var c : clazz.getDeclaredConstructors()) {
+            if (matchesParameterTypes(c, components)) {
+                constructor = c;
+                break;
+            }
+        }
+        if (constructor == null) {
+            throw new DataAccessException("No matching constructor found for record class " + clazz.getName());
+        }
+        Constructor<?> finalConstructor = constructor;
+        Function<ResultSetWrapper, T> function = (rs) -> {
+            Object[] values = new Object[components.length];
+            for (int i = 0; i < components.length; i++) {
+                var c = components[i];
+                if (c.getType() == String.class) {
+                    values[i] = rs.getString(c.getName());
+                } else if (c.getType() == long.class) {
+                    values[i] = rs.getLong(c.getName());
+                } else if (c.getType() == int.class) {
+                    values[i] = rs.getInt(c.getName());
+                } else if ((c.getType() == boolean.class)) {
+                    values[i] = rs.getBoolean(c.getName());
+                } else if (c.getType() == double.class) {
+                    values[i] = rs.getDouble(c.getName());
+                } else if (c.getType() == float.class) {
+                    values[i] = rs.getFloat(c.getName());
+                } else if (c.getType() == short.class) {
+                    values[i] = rs.getShort(c.getName());
+                } else if (c.getType() == byte.class) {
+                    values[i] = rs.getByte(c.getName());
+                } else if (c.getType() == byte[].class) {
+                    values[i] = rs.getBytes(c.getName());
+                } else if (c.getType() == LocalDateTime.class) {
+                    values[i] = rs.getLocalDateTimeLong(c.getName());
+                } else {
+                    throw new DataAccessException("Type " + c.getType().getSimpleName() + " not supported");
+                }
+            }
+            try {
+                return (T) finalConstructor.newInstance(values);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+                throw new DataAccessException("Error creating record instance", ex);
+            }
+        };
         return new PreparedStatementExecutor<>(stmt, function);
     }
 

@@ -2,6 +2,7 @@ package net.vjdv;
 
 import net.vjdv.quickquery.DataAccess;
 import net.vjdv.quickquery.QuickQuery;
+import net.vjdv.quickquery.ResultSetWrapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -115,7 +116,34 @@ public class AppTest {
                 });
     }
 
-    record Person(String name, int age) {
+    @Test
+    public void testRecordMapping() {
+        data.query("INSERT INTO person (name, age) VALUES ('Jesus', 33)").execute();
+        var person1 = data.query("SELECT name, age FROM person WHERE name = ?")
+                .setString("Jesus")
+                .resultMapper(Person.class)
+                .findOne();
+        Assertions.assertTrue(person1.isPresent());
+        Assertions.assertEquals("Jesus", person1.get().name);
+        Assertions.assertEquals(33, person1.get().age);
+    }
+
+    @Test
+    public void testConstructorMapping() {
+        data.query("INSERT INTO person (name, age) VALUES ('Juana', 18)").execute();
+        var person1 = data.query("SELECT name, age FROM person WHERE name = ?")
+                .setString("Juana")
+                .resultMapper(Person::new)
+                .findOne();
+        Assertions.assertTrue(person1.isPresent());
+        Assertions.assertEquals("Juana", person1.get().name);
+        Assertions.assertEquals(18, person1.get().age);
+    }
+
+    public record Person(String name, int age) {
+        public Person(ResultSetWrapper rs) {
+            this(rs.getString("name"), rs.getInt("age"));
+        }
     }
 
     record Point(byte[] id, int quantity, double pos, LocalDateTime datetime) {
