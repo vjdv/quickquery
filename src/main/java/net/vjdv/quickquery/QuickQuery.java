@@ -22,7 +22,7 @@ public class QuickQuery {
      * @return DataAccess instance
      */
     public static DataAccess fromSupplier(Supplier<Connection> connectionSupplier) {
-        return new DataAccess(connectionSupplier);
+        return new DataAccess(connectionSupplier, false);
     }
 
     /**
@@ -49,7 +49,7 @@ public class QuickQuery {
             } catch (SQLException ex) {
                 throw new DataAccessException("Error getting connection from datasource", ex);
             }
-        });
+        }, true);
     }
 
     /**
