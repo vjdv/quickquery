@@ -2,14 +2,8 @@ package net.vjdv.quickquery;
 
 import net.vjdv.quickquery.exceptions.DataAccessException;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.sql.*;
+import java.time.*;
 import java.util.function.Consumer;
 
 /**
@@ -290,6 +284,39 @@ public class ResultSetWrapper {
     }
 
     /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a ZonedDateTime, the original value is a long representing milliseconds since epoch utc
+     *
+     * @param column column name
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public ZonedDateTime getZonedDateTimeLong(String column) {
+        try {
+            var millis = rs.getLong(column);
+            if (rs.wasNull()) {
+                return null;
+            }
+            return Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC);
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting localdatetime from column " + column, ex);
+        }
+    }
+
+    /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a ZonedDateTime, the original value is a long representing milliseconds since epoch utc
+     *
+     * @param column column name
+     * @param zoneId the zone id to convert the ZonedDateTime to
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public ZonedDateTime getZonedDateTimeLong(String column, ZoneId zoneId) {
+        var x = getZonedDateTimeLong(column);
+        if (x == null) return null;
+        return x.withZoneSameInstant(zoneId);
+    }
+
+    /**
      * Retrieves the value of the designated column in the current row of this ResultSet object as a LocalDateTime, the original value is a long representing milliseconds since epoch
      *
      * @param column column name
@@ -297,15 +324,9 @@ public class ResultSetWrapper {
      * @throws DataAccessException if a SQLException occurs
      */
     public LocalDateTime getLocalDateTimeLong(String column) {
-        try {
-            var millis = rs.getLong(column);
-            if (rs.wasNull()) {
-                return null;
-            }
-            return Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDateTime();
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error getting localdatetime from column " + column, ex);
-        }
+        var x = getZonedDateTimeLong(column, ZoneId.systemDefault());
+        if (x == null) return null;
+        return x.toLocalDateTime();
     }
 
     /**

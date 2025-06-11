@@ -5,20 +5,11 @@ import net.vjdv.quickquery.exceptions.DataAccessException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.RecordComponent;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.NClob;
-import java.sql.PreparedStatement;
-import java.sql.Ref;
-import java.sql.RowId;
-import java.sql.SQLException;
-import java.sql.SQLXML;
-import java.sql.Time;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 /**
@@ -278,12 +269,17 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setLocalDateTimeLong(LocalDateTime value) {
-        try {
-            stmt.setLong(index++, value.toInstant(ZoneOffset.UTC).toEpochMilli());
-            return this;
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error setting localdatetime parameter", ex);
-        }
+        return setZonedDateTimeLong(value.atZone(ZoneId.systemDefault()));
+    }
+
+    /**
+     * Set a ZonedDateTime parameter converted to utc millis to consecutive parameter index, nano precision is lost
+     *
+     * @param value the ZonedDateTime value
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setZonedDateTimeLong(ZonedDateTime value) {
+        return setLong(value.withZoneSameInstant(ZoneOffset.UTC).toInstant().toEpochMilli());
     }
 
     /**
@@ -585,6 +581,8 @@ public class PreparedStatementBuilder {
                     values[i] = rs.getBytes(c.getName());
                 } else if (c.getType() == LocalDateTime.class) {
                     values[i] = rs.getLocalDateTimeLong(c.getName());
+                } else if (c.getType() == ZonedDateTime.class) {
+                    values[i] = rs.getZonedDateTimeLong(c.getName());
                 } else {
                     throw new DataAccessException("Type " + c.getType().getSimpleName() + " not supported");
                 }
