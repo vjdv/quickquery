@@ -9,6 +9,16 @@ However, vanilla `java.sql` syntax can be verbose and cumbersome.
 This is where *QuickQuery* comes in offering a lightweight and simple way
 to handle database queries with ease.
 
+Available on Maven Central:
+
+```xml
+<dependency>
+    <groupId>net.vjdv</groupId>
+    <artifactId>quickquery</artifactId>
+    <version>1.1.3</version>
+</dependency>
+```
+
 ## Examples
 
 Get one result with vanilla `java.sql`:
@@ -127,7 +137,7 @@ public class PersonService {
 
 A `DataAccessException` is thrown for any SQL exception that occurs during query execution.
 It extends `RuntimeException`, don't forget to handle it!
-For example with *Spring* you can add an `@ExceptionHandler` in yout controllers:
+For example with *Spring* you can add an `@ExceptionHandler` in your controllers:
 
 ```java
 @ExceptionHandler(DataAccessException.class)
@@ -135,16 +145,4 @@ public ResponseEntity<String> handleDataAccessException(DataAccessException ex) 
     log.error("Database error in web", ex);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database error");
 }
-```
-
-## Maven
-
-Available on Maven Central:
-
-```xml
-<dependency>
-    <groupId>net.vjdv</groupId>
-    <artifactId>quickquery</artifactId>
-    <version>1.0.0</version>
-</dependency>
 ```
