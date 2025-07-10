@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Map;
 
 /**
  * Unit test for simple App.
@@ -84,6 +87,38 @@ public class AppTest {
                 .setInt(point.quantity)
                 .setDouble(point.pos)
                 .setLocalDateTimeLong(point.datetime)
+                .execute();
+        var point1 = data.query("SELECT id, quantity, pos, datetime FROM point WHERE id = ?")
+                .setBytes(point.id)
+                .resultMapper(rs -> {
+                    byte[] id2 = rs.getBytes("id");
+                    int quantity = rs.getInt("quantity");
+                    double pos = rs.getDouble("pos");
+                    LocalDateTime datetime = rs.getLocalDateTimeLong("datetime");
+                    return new Point(id2, quantity, pos, datetime);
+                })
+                .findOne();
+        Assertions.assertTrue(point1.isPresent());
+        Assertions.assertArrayEquals(point.id, point1.get().id);
+        Assertions.assertEquals(point.quantity, point1.get().quantity);
+        Assertions.assertEquals(point.pos, point1.get().pos);
+        Assertions.assertEquals(point.datetime, point1.get().datetime);
+    }
+
+    @Test
+    public void testParametersMap() {
+        var id = new byte[16];
+        new SecureRandom().nextBytes(id);
+        var now = LocalDateTime.parse("2025-07-10T12:05:49.356");
+        var point = new Point(id, 101, 24.5, now);
+        Map<Integer, Object> params = Map.of(
+                1, point.id,
+                2, point.quantity,
+                3, point.pos,
+                4, point.datetime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toInstant().toEpochMilli()
+        );
+        data.query("INSERT INTO point (id, quantity, pos, datetime) VALUES (?, ?, ?, ?)")
+                .setParameters(params)
                 .execute();
         var point1 = data.query("SELECT id, quantity, pos, datetime FROM point WHERE id = ?")
                 .setBytes(point.id)

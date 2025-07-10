@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -520,6 +521,47 @@ public class PreparedStatementBuilder {
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting url parameter", ex);
+        }
+    }
+
+    /**
+     * Set parameters from a map where the key is the parameter index and the value is the parameter value
+     *
+     * @param parameters a map of parameters
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setParameters(Map<Integer, Object> parameters) {
+        try {
+            for (var entry : parameters.entrySet()) {
+                int index = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String x) {
+                    this.stmt.setString(index, x);
+                } else if (value instanceof Integer x) {
+                    this.stmt.setInt(index, x);
+                } else if (value instanceof Long x) {
+                    this.stmt.setLong(index, x);
+                } else if (value instanceof Boolean x) {
+                    this.stmt.setBoolean(index, x);
+                } else if (value instanceof Double x) {
+                    this.stmt.setDouble(index, x);
+                } else if (value instanceof Float x) {
+                    this.stmt.setFloat(index, x);
+                } else if (value instanceof Short x) {
+                    this.stmt.setShort(index, x);
+                } else if (value instanceof Byte x) {
+                    this.stmt.setByte(index, x);
+                } else if (value instanceof byte[] x) {
+                    this.stmt.setBytes(index, x);
+                } else if (value == null) {
+                    this.stmt.setNull(index, Types.NULL);
+                } else {
+                    this.stmt.setObject(index, value);
+                }
+            }
+            return this;
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error setting parameters", ex);
         }
     }
 
