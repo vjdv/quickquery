@@ -144,6 +144,28 @@ public class DataAccess {
         }
 
         /**
+         * Adds a condition to the query
+         *
+         * @param condition Condition to add
+         * @return QueryBuilder instance for chaining
+         */
+        private QueryBuilder add(Condition condition) {
+            sql.append(condition.column()).append(" ").append(condition.operator()).append(" ?");
+            indexParameters.put(index++, condition.value());
+            return QueryBuilder.this;
+        }
+
+        /**
+         * Adds an AND clause to the query
+         *
+         * @param condition Condition to add
+         * @return QueryBuilder instance for chaining
+         */
+        public QueryBuilder and(Condition condition) {
+            return append(" AND ").add(condition);
+        }
+
+        /**
          * Adds an AND clause to the query
          *
          * @param column column name
@@ -151,9 +173,17 @@ public class DataAccess {
          * @return QueryBuilder instance for chaining
          */
         public QueryBuilder and(String column, Object value) {
-            sql.append(" AND ").append(column).append(" = ?");
-            indexParameters.put(index++, value);
-            return QueryBuilder.this;
+            return add(new Condition(column, value));
+        }
+
+        /**
+         * Adds an OR clause to the query
+         *
+         * @param condition Condition to add
+         * @return QueryBuilder instance for chaining
+         */
+        public QueryBuilder or(Condition condition) {
+            return append(" OR ").add(condition);
         }
 
         /**
@@ -164,9 +194,43 @@ public class DataAccess {
          * @return QueryBuilder instance for chaining
          */
         public QueryBuilder or(String column, Object value) {
-            sql.append(" OR ").append(column).append(" = ?");
-            indexParameters.put(index++, value);
+            return or(new Condition(column, value));
+        }
+
+        /**
+         * Adds a condition group to the query
+         *
+         * @param condition ConditionGroup to add
+         * @return QueryBuilder instance for chaining
+         */
+        private QueryBuilder add(ConditionGroup condition) {
+            sql.append(condition.getSql());
+            for (Map.Entry<Integer, Object> entry : condition.getIndexParameters().entrySet()) {
+                var i = index + entry.getKey();
+                indexParameters.put(i, entry.getValue());
+            }
+            index += condition.getIndexParameters().size();
             return QueryBuilder.this;
+        }
+
+        /**
+         * Adds a condition group with AND to the query
+         *
+         * @param condition ConditionGroup to add
+         * @return QueryBuilder instance for chaining
+         */
+        public QueryBuilder and(ConditionGroup condition) {
+            return append(" AND ( ").add(condition).append(" )");
+        }
+
+        /**
+         * Adds a condition group with OR to the query
+         *
+         * @param condition ConditionGroup to add
+         * @return QueryBuilder instance for chaining
+         */
+        public QueryBuilder or(ConditionGroup condition) {
+            return append(" OR ( ").add(condition).append(" )");
         }
 
         /**
@@ -199,6 +263,17 @@ public class DataAccess {
          */
         public QueryBuilder orderByDesc(String... columns) {
             return orderBy(false, columns);
+        }
+
+        /**
+         * Appends additional SQL to the query
+         *
+         * @param sql any additional SQL to append
+         * @return QueryBuilder instance for chaining
+         */
+        public QueryBuilder append(String sql) {
+            this.sql.append(" ").append(sql);
+            return this;
         }
 
         /**
