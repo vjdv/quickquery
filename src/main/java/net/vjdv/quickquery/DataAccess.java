@@ -173,7 +173,7 @@ public class DataAccess {
          * @return QueryBuilder instance for chaining
          */
         public QueryBuilder and(String column, Object value) {
-            return add(new Condition(column, value));
+            return and(new Condition(column, value));
         }
 
         /**
