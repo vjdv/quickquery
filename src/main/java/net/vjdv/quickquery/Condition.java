@@ -4,7 +4,7 @@ package net.vjdv.quickquery;
  * Represents a condition for filtering data in a query.
  *
  * @param column   the column name to filter by
- * @param operator the operator to use for comparison (e.g., '=', '>', '<', etc.)
+ * @param operator the operator to use for comparison (e.g., '=', '&lt;', '&gt;', etc.)
  * @param value    the value to compare against
  */
 public record Condition(String column, String operator, Object value) {
