@@ -175,6 +175,23 @@ public class AppTest {
         Assertions.assertEquals(18, person1.get().age);
     }
 
+    @Test
+    public void testQueryBuilder() {
+        // query Jonh
+        var queryBuilder = data.select("person", "name", "age").where("age", 25).orderBy("name");
+        Assertions.assertEquals("SELECT name, age FROM person WHERE age = ? ORDER BY name ASC", queryBuilder.getSql());
+        Assertions.assertEquals(25, queryBuilder.getIndexParameters().get(1));
+        var list = queryBuilder.prepare().resultMapper(Person.class).list();
+        Assertions.assertFalse(list.isEmpty());
+        // query Jane
+        var jane = data.select(Person.class, builder -> builder.where("age", 30).and("name", "Jane")).findOne();
+        Assertions.assertTrue(jane.isPresent());
+        Assertions.assertEquals("Jane", jane.get().name);
+        // query all
+        var allPeople = data.select(Person.class).list();
+        Assertions.assertFalse(allPeople.isEmpty());
+    }
+
     public record Person(String name, int age) {
         public Person(ResultSetWrapper rs) {
             this(rs.getString("name"), rs.getInt("age"));
