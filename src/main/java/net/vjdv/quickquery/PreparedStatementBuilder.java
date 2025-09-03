@@ -17,6 +17,7 @@ import java.util.function.Function;
  * A builder class to create a PreparedStatement with parameters
  */
 public class PreparedStatementBuilder {
+    private final Connection conn;
     private final PreparedStatement stmt;
     private int index = 1;
 
@@ -25,7 +26,8 @@ public class PreparedStatementBuilder {
      *
      * @param stmt the prepared statement to be used
      */
-    public PreparedStatementBuilder(PreparedStatement stmt) {
+    public PreparedStatementBuilder(Connection conn, PreparedStatement stmt) {
+        this.conn = conn;
         this.stmt = stmt;
     }
 
@@ -65,6 +67,21 @@ public class PreparedStatementBuilder {
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting array parameter", ex);
+        }
+    }
+
+    /**
+     * Set a text array parameter to consecutive parameter index
+     * @param values the text array values
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setTextArray(String[] values) {
+        try {
+            Array array = conn.createArrayOf("text", values);
+            stmt.setArray(index++, array);
+            return this;
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error setting text array parameter", ex);
         }
     }
 

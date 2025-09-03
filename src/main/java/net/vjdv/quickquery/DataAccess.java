@@ -43,9 +43,10 @@ public class DataAccess {
      * @return PreparedStatementBuilder
      */
     public PreparedStatementBuilder query(String sql) {
+        var conn = conn();
         try {
-            var stmt = conn().prepareStatement(sql);
-            return new PreparedStatementBuilder(new PreparedStatementWrapper(stmt, closeConnection));
+            var stmt = conn.prepareStatement(sql);
+            return new PreparedStatementBuilder(conn, new PreparedStatementWrapper(stmt, closeConnection));
         } catch (SQLException ex) {
             throw new DataAccessException("Error creating prepared statement", ex);
         }
@@ -58,9 +59,10 @@ public class DataAccess {
      * @return PreparedStatementBuilder
      */
     public PreparedStatementBuilder queryWithGeneratedKey(String sql) {
+        var conn = conn();
         try {
-            var stmt = conn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            return new PreparedStatementBuilder(new PreparedStatementWrapper(stmt, closeConnection));
+            var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            return new PreparedStatementBuilder(conn, new PreparedStatementWrapper(stmt, closeConnection));
         } catch (SQLException ex) {
             throw new DataAccessException("Error creating prepared statement", ex);
         }
