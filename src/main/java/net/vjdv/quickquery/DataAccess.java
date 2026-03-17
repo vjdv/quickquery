@@ -1,10 +1,6 @@
 package net.vjdv.quickquery;
 
-import net.vjdv.quickquery.exceptions.DataAccessException;
-
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -13,18 +9,25 @@ import java.util.function.Supplier;
 /**
  * Data access class
  */
-public class DataAccess {
+public class DataAccess implements ConnectionWrapper {
     private final Supplier<Connection> connectionSupplier;
-    private final boolean closeConnection;
 
     /**
      * Creates a new instance of DataAccess
      *
      * @param connectionSupplier supplier of connection
      */
-    protected DataAccess(Supplier<Connection> connectionSupplier, boolean closeConnection) {
+    protected DataAccess(Supplier<Connection> connectionSupplier) {
         this.connectionSupplier = connectionSupplier;
-        this.closeConnection = closeConnection;
+    }
+
+    /**
+     * Creates a data access abstraction in wich the connection will be closed after use, useful for try-with-resources
+     *
+     * @return CloseableAccess instance with the connection
+     */
+    public CloseableAccess closeableAccess() {
+        return new CloseableAccess(getConnection());
     }
 
     /**
@@ -32,41 +35,11 @@ public class DataAccess {
      *
      * @return connection
      */
-    private Connection conn() {
+    @Override
+    public Connection getConnection() {
         return connectionSupplier.get();
     }
 
-    /**
-     * Creates a new PreparedStatementBuilder for a query
-     *
-     * @param sql query
-     * @return PreparedStatementBuilder
-     */
-    public PreparedStatementBuilder query(String sql) {
-        var conn = conn();
-        try {
-            var stmt = conn.prepareStatement(sql);
-            return new PreparedStatementBuilder(conn, new PreparedStatementWrapper(stmt, closeConnection));
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error creating prepared statement", ex);
-        }
-    }
-
-    /**
-     * Creates a new PreparedStatementBuilder for a query with generated keys, useful for autoincrement or serial columns
-     *
-     * @param sql query
-     * @return PreparedStatementBuilder
-     */
-    public PreparedStatementBuilder queryWithGeneratedKey(String sql) {
-        var conn = conn();
-        try {
-            var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            return new PreparedStatementBuilder(conn, new PreparedStatementWrapper(stmt, closeConnection));
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error creating prepared statement", ex);
-        }
-    }
 
     /**
      * Starts a query builder with all columns for a SELECT statement
