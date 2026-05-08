@@ -72,6 +72,7 @@ public class PreparedStatementBuilder {
 
     /**
      * Set a text array parameter to consecutive parameter index
+     *
      * @param values the text array values
      * @return same PreparedStatementBuilder instance
      */
@@ -705,6 +706,34 @@ public class PreparedStatementBuilder {
             }
         } catch (SQLException ex) {
             throw new DataAccessException("Error executing insert", ex);
+        }
+    }
+
+    /**
+     * Adds the current set of parameters as a batch entry and resets the parameter index to 1
+     *
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder addBatch() {
+        try {
+            stmt.addBatch();
+            index = 1;
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error adding batch", ex);
+        }
+        return this;
+    }
+
+    /**
+     * Executes the batch of commands added using addBatch and returns an array of update counts for each command in the batch
+     *
+     * @return an array of update counts for each command in the batch
+     */
+    public int[] executeBatch() {
+        try {
+            return stmt.executeBatch();
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error executing batch", ex);
         }
     }
 
