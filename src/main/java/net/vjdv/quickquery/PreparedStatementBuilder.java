@@ -62,8 +62,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setArray(Array value) {
+        return setArray(value, index++);
+    }
+
+    /**
+     * Set an array parameter to specific parameter index
+     *
+     * @param value          the array value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setArray(Array value, int parameterIndex) {
         try {
-            stmt.setArray(index++, value);
+            stmt.setArray(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting array parameter", ex);
@@ -77,9 +88,20 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setTextArray(String[] values) {
+        return setTextArray(values, index++);
+    }
+
+    /**
+     * Set a text array parameter to specific parameter index
+     *
+     * @param values         the text array values
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setTextArray(String[] values, int parameterIndex) {
         try {
             Array array = conn.createArrayOf("text", values);
-            stmt.setArray(index++, array);
+            stmt.setArray(parameterIndex, array);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting text array parameter", ex);
@@ -93,8 +115,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setAsciiStream(java.io.InputStream value) {
+        return setAsciiStream(value, index++);
+    }
+
+    /**
+     * Set an ascii stream parameter to specific parameter index
+     *
+     * @param value          the ascii stream value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setAsciiStream(java.io.InputStream value, int parameterIndex) {
         try {
-            stmt.setAsciiStream(index++, value);
+            stmt.setAsciiStream(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting ascii stream parameter", ex);
@@ -108,8 +141,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setBigDecimal(java.math.BigDecimal value) {
+        return setBigDecimal(value, index++);
+    }
+
+    /**
+     * Set a big decimal parameter to specific parameter index
+     *
+     * @param value          the big decimal value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setBigDecimal(java.math.BigDecimal value, int parameterIndex) {
         try {
-            stmt.setBigDecimal(index++, value);
+            stmt.setBigDecimal(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting bigdecimal parameter", ex);
@@ -123,8 +167,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setBinaryStream(java.io.InputStream value) {
+        return setBinaryStream(value, index++);
+    }
+
+    /**
+     * Set a binary stream parameter to specific parameter index
+     *
+     * @param value          the binary stream value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setBinaryStream(java.io.InputStream value, int parameterIndex) {
         try {
-            stmt.setBinaryStream(index++, value);
+            stmt.setBinaryStream(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting binary stream parameter", ex);
@@ -138,8 +193,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setBlob(Blob value) {
+        return setBlob(value, index++);
+    }
+
+    /**
+     * Set a blob parameter to specific parameter index
+     *
+     * @param value          the blob value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setBlob(Blob value, int parameterIndex) {
         try {
-            stmt.setBlob(index++, value);
+            stmt.setBlob(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting blob parameter", ex);
@@ -153,8 +219,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setBoolean(boolean value) {
+        return setBoolean(value, index++);
+    }
+
+    /**
+     * Set a boolean parameter to specific parameter index
+     *
+     * @param value          the boolean value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setBoolean(boolean value, int parameterIndex) {
         try {
-            stmt.setBoolean(index++, value);
+            stmt.setBoolean(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting boolean parameter", ex);
@@ -168,8 +245,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setByte(byte value) {
+        return setByte(value, index++);
+    }
+
+    /**
+     * Set a byte parameter to specific parameter index
+     *
+     * @param value          the byte value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setByte(byte value, int parameterIndex) {
         try {
-            stmt.setByte(index++, value);
+            stmt.setByte(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting byte parameter", ex);
@@ -183,8 +271,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setBytes(byte[] value) {
+        return setBytes(value, index++);
+    }
+
+    /**
+     * Set a byte array parameter to specific parameter index
+     *
+     * @param value          the byte array value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setBytes(byte[] value, int parameterIndex) {
         try {
-            stmt.setBytes(index++, value);
+            stmt.setBytes(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting bytes parameter", ex);
@@ -198,8 +297,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setCharacterStream(java.io.Reader value) {
+        return setCharacterStream(value, index++);
+    }
+
+    /**
+     * Set a character stream parameter to specific parameter index
+     *
+     * @param value          the character stream value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setCharacterStream(java.io.Reader value, int parameterIndex) {
         try {
-            stmt.setCharacterStream(index++, value);
+            stmt.setCharacterStream(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting character stream parameter", ex);
@@ -213,8 +323,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setClob(Clob value) {
+        return setClob(value, index++);
+    }
+
+    /**
+     * Set a clob parameter to specific parameter index
+     *
+     * @param value          the clob value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setClob(Clob value, int parameterIndex) {
         try {
-            stmt.setClob(index++, value);
+            stmt.setClob(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting clob parameter", ex);
@@ -228,8 +349,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setDate(Date value) {
+        return setDate(value, index++);
+    }
+
+    /**
+     * Set a date parameter to specific parameter index
+     *
+     * @param value          the date value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setDate(Date value, int parameterIndex) {
         try {
-            stmt.setDate(index++, value);
+            stmt.setDate(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting date parameter", ex);
@@ -243,8 +375,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setDouble(double value) {
+        return setDouble(value, index++);
+    }
+
+    /**
+     * Set a double parameter to specific parameter index
+     *
+     * @param value          the double value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setDouble(double value, int parameterIndex) {
         try {
-            stmt.setDouble(index++, value);
+            stmt.setDouble(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting double parameter", ex);
@@ -258,8 +401,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setFloat(float value) {
+        return setFloat(value, index++);
+    }
+
+    /**
+     * Set a float parameter to specific parameter index
+     *
+     * @param value          the float value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setFloat(float value, int parameterIndex) {
         try {
-            stmt.setFloat(index++, value);
+            stmt.setFloat(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting float parameter", ex);
@@ -273,8 +427,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setInt(int value) {
+        return setInt(value, index++);
+    }
+
+    /**
+     * Set an int parameter to specific parameter index
+     *
+     * @param value          the int value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setInt(int value, int parameterIndex) {
         try {
-            stmt.setInt(index++, value);
+            stmt.setInt(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting int parameter", ex);
@@ -288,7 +453,18 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setLocalDateTimeLong(LocalDateTime value) {
-        return setZonedDateTimeLong(value.atZone(ZoneId.systemDefault()));
+        return setLocalDateTimeLong(value, index++);
+    }
+
+    /**
+     * Set a LocalDateTime parameter converted to utc millis to specific parameter index, nano precision is lost
+     *
+     * @param value          the LocalDateTime value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setLocalDateTimeLong(LocalDateTime value, int parameterIndex) {
+        return setZonedDateTimeLong(value.atZone(ZoneId.systemDefault()), parameterIndex);
     }
 
     /**
@@ -298,7 +474,18 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setZonedDateTimeLong(ZonedDateTime value) {
-        return setLong(value.withZoneSameInstant(ZoneOffset.UTC).toInstant().toEpochMilli());
+        return setZonedDateTimeLong(value, index++);
+    }
+
+    /**
+     * Set a ZonedDateTime parameter converted to utc millis to specific parameter index, nano precision is lost
+     *
+     * @param value          the ZonedDateTime value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setZonedDateTimeLong(ZonedDateTime value, int parameterIndex) {
+        return setLong(value.withZoneSameInstant(ZoneOffset.UTC).toInstant().toEpochMilli(), parameterIndex);
     }
 
     /**
@@ -308,8 +495,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setLong(long value) {
+        return setLong(value, index++);
+    }
+
+    /**
+     * Set a long parameter to specific parameter index
+     *
+     * @param value          the long value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setLong(long value, int parameterIndex) {
         try {
-            stmt.setLong(index++, value);
+            stmt.setLong(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting long parameter", ex);
@@ -323,8 +521,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setNCharacterStream(java.io.Reader value) {
+        return setNCharacterStream(value, index++);
+    }
+
+    /**
+     * Set a ncharacter stream parameter to specific parameter index
+     *
+     * @param value          the ncharacter stream value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setNCharacterStream(java.io.Reader value, int parameterIndex) {
         try {
-            stmt.setNCharacterStream(index++, value);
+            stmt.setNCharacterStream(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting ncharacter stream parameter", ex);
@@ -338,8 +547,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setNClob(NClob value) {
+        return setNClob(value, index++);
+    }
+
+    /**
+     * Set a nclob parameter to specific parameter index
+     *
+     * @param value          the nclob value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setNClob(NClob value, int parameterIndex) {
         try {
-            stmt.setNClob(index++, value);
+            stmt.setNClob(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting nclob parameter", ex);
@@ -353,8 +573,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setNClob(java.io.Reader value) {
+        return setNClob(value, index++);
+    }
+
+    /**
+     * Set a nclob parameter to specific parameter index
+     *
+     * @param value          the nclob value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setNClob(java.io.Reader value, int parameterIndex) {
         try {
-            stmt.setNClob(index++, value);
+            stmt.setNClob(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting nclob parameter", ex);
@@ -368,8 +599,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setNString(String value) {
+        return setNString(value, index++);
+    }
+
+    /**
+     * Set a nstring parameter to specific parameter index
+     *
+     * @param value          the nstring value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setNString(String value, int parameterIndex) {
         try {
-            stmt.setNString(index++, value);
+            stmt.setNString(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting nstring parameter", ex);
@@ -383,8 +625,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setNull(int sqlType) {
+        return setNull(sqlType, index++);
+    }
+
+    /**
+     * Set a null parameter to specific parameter index
+     *
+     * @param sqlType        the sql type
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setNull(int sqlType, int parameterIndex) {
         try {
-            stmt.setNull(index++, sqlType);
+            stmt.setNull(parameterIndex, sqlType);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting null parameter", ex);
@@ -399,8 +652,20 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setNull(int sqlType, String typeName) {
+        return setNull(sqlType, typeName, index++);
+    }
+
+    /**
+     * Set a null parameter to specific parameter index
+     *
+     * @param sqlType        the sql type
+     * @param typeName       the type name
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setNull(int sqlType, String typeName, int parameterIndex) {
         try {
-            stmt.setNull(index++, sqlType, typeName);
+            stmt.setNull(parameterIndex, sqlType, typeName);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting null parameter", ex);
@@ -414,8 +679,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setObject(Object value) {
+        return setObject(value, index++);
+    }
+
+    /**
+     * Set an object parameter to specific parameter index
+     *
+     * @param value          the object value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setObject(Object value, int parameterIndex) {
         try {
-            stmt.setObject(index++, value);
+            stmt.setObject(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting object parameter", ex);
@@ -429,8 +705,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setRef(Ref value) {
+        return setRef(value, index++);
+    }
+
+    /**
+     * Set an ref parameter to specific parameter index
+     *
+     * @param value          the ref value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setRef(Ref value, int parameterIndex) {
         try {
-            stmt.setRef(index++, value);
+            stmt.setRef(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting ref parameter", ex);
@@ -444,8 +731,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setRowId(RowId value) {
+        return setRowId(value, index++);
+    }
+
+    /**
+     * Set a rowid parameter to specific parameter index
+     *
+     * @param value          the rowid value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setRowId(RowId value, int parameterIndex) {
         try {
-            stmt.setRowId(index++, value);
+            stmt.setRowId(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting rowid parameter", ex);
@@ -459,8 +757,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setShort(short value) {
+        return setShort(value, index++);
+    }
+
+    /**
+     * Set a short parameter to specific parameter index
+     *
+     * @param value          the short value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setShort(short value, int parameterIndex) {
         try {
-            stmt.setShort(index++, value);
+            stmt.setShort(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting short parameter", ex);
@@ -474,8 +783,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setSQLXML(SQLXML value) {
+        return setSQLXML(value, index++);
+    }
+
+    /**
+     * Set a sqlxml parameter to specific parameter index
+     *
+     * @param value          the sqlxml value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setSQLXML(SQLXML value, int parameterIndex) {
         try {
-            stmt.setSQLXML(index++, value);
+            stmt.setSQLXML(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting sqlxml parameter", ex);
@@ -489,12 +809,36 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setString(String value) {
+        return setString(value, index++);
+    }
+
+    /**
+     * Set a string parameter to specific parameter index
+     *
+     * @param value          the string value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setString(String value, int parameterIndex) {
         try {
-            stmt.setString(index++, value);
+            stmt.setString(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting string parameter", ex);
         }
+    }
+
+    /**
+     * Set multiple string parameters to consecutive parameter indexes
+     *
+     * @param values the string values
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setStrings(String... values) {
+        for (String value : values) {
+            setString(value);
+        }
+        return this;
     }
 
     /**
@@ -504,8 +848,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setTime(Time value) {
+        return setTime(value, index++);
+    }
+
+    /**
+     * Set a time parameter to specific parameter index
+     *
+     * @param value          the time value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setTime(Time value, int parameterIndex) {
         try {
-            stmt.setTime(index++, value);
+            stmt.setTime(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting time parameter", ex);
@@ -519,8 +874,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setTimestamp(Timestamp value) {
+        return setTimestamp(value, index++);
+    }
+
+    /**
+     * Set a timestamp parameter to specific parameter index
+     *
+     * @param value          the timestamp value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setTimestamp(Timestamp value, int parameterIndex) {
         try {
-            stmt.setTimestamp(index++, value);
+            stmt.setTimestamp(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting timestamp parameter", ex);
@@ -534,8 +900,19 @@ public class PreparedStatementBuilder {
      * @return same PreparedStatementBuilder instance
      */
     public PreparedStatementBuilder setURL(java.net.URL value) {
+        return setURL(value, index++);
+    }
+
+    /**
+     * Set a url parameter to specific parameter index
+     *
+     * @param value          the url value
+     * @param parameterIndex the parameter index
+     * @return same PreparedStatementBuilder instance
+     */
+    public PreparedStatementBuilder setURL(java.net.URL value, int parameterIndex) {
         try {
-            stmt.setURL(index++, value);
+            stmt.setURL(parameterIndex, value);
             return this;
         } catch (SQLException ex) {
             throw new DataAccessException("Error setting url parameter", ex);
