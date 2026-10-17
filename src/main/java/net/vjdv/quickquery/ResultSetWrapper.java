@@ -519,6 +519,74 @@ public class ResultSetWrapper {
     }
 
     /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a LocalDateTime object.
+     *
+     * @param column column name
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public LocalDateTime getLocalDateTime(String column) {
+        try {
+            return rs.getObject(column, LocalDateTime.class);
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting LocalDateTime from column " + column, ex);
+        }
+    }
+
+    /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a LocalDateTime object.
+     *
+     * @param column column index
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public LocalDateTime getLocalDateTime(int column) {
+        try {
+            return rs.getObject(column, LocalDateTime.class);
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting LocalDateTime from column " + column, ex);
+        }
+    }
+
+    /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a String array.
+     *
+     * @param column column name
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public String[] getStringArray(String column) {
+        try {
+            Array array = rs.getArray(column);
+            if (array == null) {
+                return null;
+            }
+            return (String[]) array.getArray();
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting String array from column " + column, ex);
+        }
+    }
+
+    /**
+     * Retrieves the value of the designated column in the current row of this ResultSet object as a String array.
+     *
+     * @param column column index
+     * @return the column value; if the value is SQL NULL, the value returned is null
+     * @throws DataAccessException if a SQLException occurs
+     */
+    public String[] getStringArray(int column) {
+        try {
+            Array array = rs.getArray(column);
+            if (array == null) {
+                return null;
+            }
+            return (String[]) array.getArray();
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error getting String array from column " + column, ex);
+        }
+    }
+
+    /**
      * Reports whether the last column read had a value of SQL NULL. Note that you must first call one of the getter methods on a column to try to read its value and then call the method wasNull to see if the value read was SQL NULL.
      *
      * @return true if the last column read was SQL NULL

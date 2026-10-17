@@ -3,13 +3,14 @@ package net.vjdv.quickquery;
 import net.vjdv.quickquery.exceptions.DataAccessException;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Executes a prepared statement and processes the result set
@@ -29,6 +30,27 @@ public class PreparedStatementExecutor<T> {
     public PreparedStatementExecutor(PreparedStatement stmt, Function<ResultSetWrapper, T> function) {
         this.stmt = stmt;
         this.function = function;
+    }
+
+    private static void close(ResultSet rs, PreparedStatement stmt) {
+        SQLException error = null;
+        try {
+            rs.close();
+        } catch (SQLException ex) {
+            error = ex;
+        }
+        try {
+            stmt.close();
+        } catch (SQLException ex) {
+            if (error == null) {
+                error = ex;
+            } else {
+                error.addSuppressed(ex);
+            }
+        }
+        if (error != null) {
+            throw new DataAccessException("Error closing stream", error);
+        }
     }
 
     /**
@@ -81,6 +103,38 @@ public class PreparedStatementExecutor<T> {
         } catch (SQLException ex) {
             throw new DataAccessException("Error quering list", ex);
         }
+    }
+
+    /**
+     * Returns a lazy stream of items from the result set.
+     * Close the stream to release the statement and result set.
+     *
+     * @return stream of items
+     */
+    public Stream<T> stream() {
+        ResultSetWrapper rs;
+        try {
+            var rsx = stmt.executeQuery();
+            rs = new ResultSetWrapper(rsx);
+        } catch (SQLException ex) {
+            try {
+                stmt.close();
+            } catch (SQLException closeEx) {
+                ex.addSuppressed(closeEx);
+            }
+            throw new DataAccessException("Error quering list", ex);
+        }
+        Spliterator<T> spliterator = new Spliterators.AbstractSpliterator<>(Long.MAX_VALUE, Spliterator.ORDERED) {
+            @Override
+            public boolean tryAdvance(Consumer<? super T> action) {
+                if (!rs.next()) {
+                    return false;
+                }
+                action.accept(function.apply(rs));
+                return true;
+            }
+        };
+        return StreamSupport.stream(spliterator, false).onClose(() -> close(rs.getResultSet(), stmt));
     }
 
 }
